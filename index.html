@@ -431,7 +431,7 @@
                     <button class="btn btn-primary" style="padding:5px; font-size:0.68rem;" onclick="addNewTeam()"><span>+ Csapat</span></button>
                     <button class="btn btn-primary" style="padding:5px; font-size:0.68rem;" onclick="addPlayerToTeam()"><span>+ Játékos</span></button>
                 </div>
-                <!-- APK BIZTOS EXPORT / MÁSOLÁS ÉS BETÖLTÉS GOMBOK -->
+                <!-- EXPORT ÉS BETÖLTÉS GOMBOK -->
                 <button class="btn btn-primary" style="background:#38bdf8; border-color:#38bdf8; padding:5px; font-size:0.68rem;" onclick="downloadDatabaseJSON()"><span>📋 Exportálás (Másolás)</span></button>
                 <button class="btn btn-primary" style="background:#fbbf24; border-color:#fbbf24; color:#090d16; padding:5px; font-size:0.68rem;" onclick="document.getElementById('import-db-file').click()"><span>📂 Betöltés</span></button>
                 <input type="file" id="import-db-file" accept=".json,.txt" class="hidden" onchange="importDatabaseJSON(event)">
@@ -469,7 +469,7 @@
     <div id="export-modal" class="modal-overlay hidden">
         <div class="modal-card">
             <div class="modal-title">📋 Adatbázis Export</div>
-            <div style="font-size: 0.65rem; color: var(--text-muted); text-align: center;">Másold ki az alábbi JSON kódot, vagy illeszd be egy fájlba:</div>
+            <div style="font-size: 0.65rem; color: var(--text-muted); text-align: center;">Másold ki az alábbi JSON kódot:</div>
             <textarea id="export-textarea" class="modal-input" style="height: 120px; font-size: 0.65rem; resize: none;" readonly></textarea>
             <div style="display: flex; gap: 4px;">
                 <button class="btn btn-primary" onclick="copyExportText()">📋 Másolás Vágólapra</button>
@@ -478,7 +478,7 @@
         </div>
     </div>
 
-    <!-- Játékos Szerkesztő Modál (Új sorrend és mezők) -->
+    <!-- Játékos Szerkesztő Modál -->
     <div id="player-modal" class="modal-overlay hidden">
         <div class="modal-card" id="player-form-card">
             <div class="modal-title" id="player-modal-title">Új Játékos Hozzáadása</div>
@@ -686,14 +686,79 @@
             `;
         }
 
+        // ALAPÉRTELMEZETT BEÉPÍTETT ADATBÁZIS (England, Premier League, Arsenal kerettel)
+        const defaultDB = [
+            {
+                "country": "England",
+                "leagues": [
+                    {
+                        "name": "Premier League",
+                        "teams": [
+                            {
+                                "name": "Arsenal",
+                                "formation": "4-4-2",
+                                "players": [
+                                    { "number": 6, "name": "Gabriel", "nat": "Brazil", "pos": "LCB", "age": 28, "ovr": 89, "pot": 90, "contract": "2029", "value": "€97,500,000", "wage": "€245,000", "skill": 89, "goals": 0, "yellowCards": 0, "redCards": 0, "suspendedMatches": 0, "cleanSheets": 0, "transferListed": false, "stamina": 100 },
+                                    { "number": 1, "name": "David Raya", "nat": "Spain", "pos": "GK", "age": 30, "ovr": 88, "pot": 88, "contract": "2028", "value": "€61,000,000", "wage": "€145,000", "skill": 88, "goals": 0, "yellowCards": 0, "redCards": 0, "suspendedMatches": 0, "cleanSheets": 0, "transferListed": false, "stamina": 100 },
+                                    { "number": 41, "name": "Declan Rice", "nat": "England", "pos": "LDM", "age": 27, "ovr": 88, "pot": 89, "contract": "2028", "value": "€93,500,000", "wage": "€215,000", "skill": 88, "goals": 0, "yellowCards": 0, "redCards": 0, "suspendedMatches": 0, "cleanSheets": 0, "transferListed": false, "stamina": 100 },
+                                    { "number": 7, "name": "Bukayo Saka", "nat": "England", "pos": "RM", "age": 24, "ovr": 87, "pot": 89, "contract": "2030", "value": "€103,500,000", "wage": "€195,000", "skill": 87, "goals": 0, "yellowCards": 0, "redCards": 0, "suspendedMatches": 0, "cleanSheets": 0, "transferListed": false, "stamina": 100 },
+                                    { "number": 8, "name": "Martin Ødegaard", "nat": "Norway", "pos": "CAM", "age": 27, "ovr": 86, "pot": 89, "contract": "2028", "value": "€86,500,000", "wage": "€190,000", "skill": 86, "goals": 0, "yellowCards": 0, "redCards": 0, "suspendedMatches": 0, "cleanSheets": 0, "transferListed": false, "stamina": 100 },
+                                    { "number": 39, "name": "Bruno Guimarães", "nat": "Brazil", "pos": "RDM", "age": 28, "ovr": 86, "pot": 87, "contract": "2030", "value": "€73,500,000", "wage": "€200,000", "skill": 86, "goals": 0, "yellowCards": 0, "redCards": 0, "suspendedMatches": 0, "cleanSheets": 0, "transferListed": false, "stamina": 100 },
+                                    { "number": 17, "name": "Christos Tzolis", "nat": "Greece", "pos": "LM", "age": 24, "ovr": 82, "pot": 88, "contract": "2031", "value": "€48,000,000", "wage": "€125,000", "skill": 82, "goals": 0, "yellowCards": 0, "redCards": 0, "suspendedMatches": 0, "cleanSheets": 0, "transferListed": false, "stamina": 100 },
+                                    { "number": 33, "name": "Riccardo Calafiori", "nat": "Italy", "pos": "LB", "age": 24, "ovr": 82, "pot": 86, "contract": "2029", "value": "€40,500,000", "wage": "€110,000", "skill": 82, "goals": 0, "yellowCards": 0, "redCards": 0, "suspendedMatches": 0, "cleanSheets": 0, "transferListed": false, "stamina": 100 },
+                                    { "number": 4, "name": "Benjamin White", "nat": "England", "pos": "RB", "age": 28, "ovr": 81, "pot": 84, "contract": "2028", "value": "€29,000,000", "wage": "€125,000", "skill": 81, "goals": 0, "yellowCards": 0, "redCards": 0, "suspendedMatches": 0, "cleanSheets": 0, "transferListed": false, "stamina": 100 },
+                                    { "number": 29, "name": "Kai Havertz", "nat": "Germany", "pos": "ST", "age": 27, "ovr": 81, "pot": 85, "contract": "2028", "value": "€35,000,000", "wage": "€135,000", "skill": 81, "goals": 0, "yellowCards": 0, "redCards": 0, "suspendedMatches": 0, "cleanSheets": 0, "transferListed": false, "stamina": 100 },
+                                    { "number": 3, "name": "Cristhian Mosquera", "nat": "Spain", "pos": "RCB", "age": 22, "ovr": 78, "pot": 85, "contract": "2030", "value": "€26,500,000", "wage": "€81,000", "skill": 78, "goals": 0, "yellowCards": 0, "redCards": 0, "suspendedMatches": 0, "cleanSheets": 0, "transferListed": false, "stamina": 100 },
+                                    { "number": 2, "name": "William Saliba", "nat": "France", "pos": "CB", "age": 25, "ovr": 88, "pot": 90, "contract": "2030", "value": "€101,500,000", "wage": "€205,000", "skill": 88, "goals": 0, "yellowCards": 0, "redCards": 0, "suspendedMatches": 0, "cleanSheets": 0, "transferListed": false, "stamina": 100 },
+                                    { "number": 14, "name": "Viktor Gyökeres", "nat": "Sweden", "pos": "ST", "age": 28, "ovr": 86, "pot": 87, "contract": "2030", "value": "€75,500,000", "wage": "€215,000", "skill": 86, "goals": 0, "yellowCards": 0, "redCards": 0, "suspendedMatches": 0, "cleanSheets": 0, "transferListed": false, "stamina": 100 },
+                                    { "number": 15, "name": "Ezri Konsa", "nat": "England", "pos": "CB", "age": 28, "ovr": 84, "pot": 85, "contract": "2030", "value": "€40,000,000", "wage": "€160,000", "skill": 84, "goals": 0, "yellowCards": 0, "redCards": 0, "suspendedMatches": 0, "cleanSheets": 0, "transferListed": false, "stamina": 100 },
+                                    { "number": 10, "name": "Eberechi Eze", "nat": "England", "pos": "CAM", "age": 28, "ovr": 84, "pot": 84, "contract": "2029", "value": "€42,500,000", "wage": "€170,000", "skill": 84, "goals": 0, "yellowCards": 0, "redCards": 0, "suspendedMatches": 0, "cleanSheets": 0, "transferListed": false, "stamina": 100 },
+                                    { "number": 36, "name": "Zubimendi", "nat": "Spain", "pos": "CDM", "age": 27, "ovr": 84, "pot": 86, "contract": "2030", "value": "€45,500,000", "wage": "€155,000", "skill": 84, "goals": 0, "yellowCards": 0, "redCards": 0, "suspendedMatches": 0, "cleanSheets": 0, "transferListed": false, "stamina": 100 },
+                                    { "number": 12, "name": "Jurriën Timber", "nat": "Netherlands", "pos": "RB", "age": 25, "ovr": 84, "pot": 87, "contract": "2028", "value": "€51,500,000", "wage": "€145,000", "skill": 84, "goals": 0, "yellowCards": 0, "redCards": 0, "suspendedMatches": 0, "cleanSheets": 0, "transferListed": false, "stamina": 100 },
+                                    { "number": 5, "name": "Piero Hincapié", "nat": "Ecuador", "pos": "LB", "age": 24, "ovr": 84, "pot": 87, "contract": "2031", "value": "€53,500,000", "wage": "€130,000", "skill": 84, "goals": 0, "yellowCards": 0, "redCards": 0, "suspendedMatches": 0, "cleanSheets": 0, "transferListed": false, "stamina": 100 },
+                                    { "number": 23, "name": "Mikel Merino", "nat": "Spain", "pos": "CM", "age": 30, "ovr": 83, "pot": 85, "contract": "2028", "value": "€40,000,000", "wage": "€150,000", "skill": 83, "goals": 0, "yellowCards": 0, "redCards": 0, "suspendedMatches": 0, "cleanSheets": 0, "transferListed": false, "stamina": 100 },
+                                    { "number": 20, "name": "Noni Madueke", "nat": "England", "pos": "RW", "age": 24, "ovr": 80, "pot": 84, "contract": "2030", "value": "€30,000,000", "wage": "€110,000", "skill": 80, "goals": 0, "yellowCards": 0, "redCards": 0, "suspendedMatches": 0, "cleanSheets": 0, "transferListed": false, "stamina": 100 },
+                                    { "number": 13, "name": "Kepa", "nat": "Spain", "pos": "GK", "age": 31, "ovr": 78, "pot": 84, "contract": "2028", "value": "€13,500,000", "wage": "€64,000", "skill": 78, "goals": 0, "yellowCards": 0, "redCards": 0, "suspendedMatches": 0, "cleanSheets": 0, "transferListed": false, "stamina": 100 },
+                                    { "number": 49, "name": "Myles Lewis-Skelly", "nat": "England", "pos": "LB", "age": 19, "ovr": 78, "pot": 87, "contract": "2030", "value": "€29,000,000", "wage": "€64,000", "skill": 78, "goals": 0, "yellowCards": 0, "redCards": 0, "suspendedMatches": 0, "cleanSheets": 0, "transferListed": false, "stamina": 100 },
+                                    { "number": 30, "name": "Illan Meslier", "nat": "France", "pos": "GK", "age": 26, "ovr": 71, "pot": 77, "contract": "2029", "value": "€2,300,000", "wage": "€34,000", "skill": 71, "goals": 0, "yellowCards": 0, "redCards": 0, "suspendedMatches": 0, "cleanSheets": 0, "transferListed": false, "stamina": 100 }
+                                ]
+                            },
+                            { "name": "Manchester City", "formation": "4-4-2", "players": [] },
+                            { "name": "Liverpool", "formation": "4-4-2", "players": [] },
+                            { "name": "Manchester United", "formation": "4-4-2", "players": [] },
+                            { "name": "Chelsea", "formation": "4-4-2", "players": [] },
+                            { "name": "Tottenham Hotspur", "formation": "4-4-2", "players": [] },
+                            { "name": "Aston Villa", "formation": "4-4-2", "players": [] },
+                            { "name": "Newcastle United", "formation": "4-4-2", "players": [] },
+                            { "name": "Nottingham Forest", "formation": "4-4-2", "players": [] },
+                            { "name": "Sunderland", "formation": "4-4-2", "players": [] },
+                            { "name": "Crystal Palace", "formation": "4-4-2", "players": [] },
+                            { "name": "Everton", "formation": "4-4-2", "players": [] },
+                            { "name": "Brighton & Hove Albion", "formation": "4-4-2", "players": [] },
+                            { "name": "Brentford", "formation": "4-4-2", "players": [] },
+                            { "name": "AFC Bournemouth", "formation": "4-4-2", "players": [] },
+                            { "name": "Leeds United", "formation": "4-4-2", "players": [] },
+                            { "name": "Fulham", "formation": "4-4-2", "players": [] },
+                            { "name": "Ipswich Town", "formation": "4-4-2", "players": [] },
+                            { "name": "Coventry City", "formation": "4-4-2", "players": [] },
+                            { "name": "Hull City", "formation": "4-4-2", "players": [] }
+                        ]
+                    }
+                ]
+            }
+        ];
+
         let db = [];
         try {
             let savedDB = localStorage.getItem('tm26_db_v162');
             if (savedDB) {
                 db = JSON.parse(savedDB);
+            } else {
+                db = defaultDB; // Ha nincs mentés, betölti az alapértelmezett adatbázist!
+                saveToLocalStorage();
             }
         } catch (e) {
-            console.log("Hiba a mentett adatbázis olvasásakor.");
+            db = defaultDB;
         }
 
         let currentCountryIdx = 0, currentLeagueIdx = 0, currentTeamIdx = 0;
@@ -703,7 +768,6 @@
             localStorage.setItem('tm26_db_v162', JSON.stringify(db));
         }
 
-        // APK-BIZTOS EXPORT / MÁSOLÁS FUNKCIÓ
         function downloadDatabaseJSON() {
             let jsonString = JSON.stringify(db, null, 2);
             document.getElementById('export-textarea').value = jsonString;
@@ -978,7 +1042,7 @@
 
             let playerData = {
                 name, number, nat, pos, age, ovr, pot, contract, value, wage,
-                skill: ovr, // Kompatibilitás miatt megőrizzük
+                skill: ovr,
                 goals: 0, yellowCards: 0, redCards: 0, suspendedMatches: 0, cleanSheets: 0, transferListed: false, stamina: 100
             };
 
@@ -1005,12 +1069,12 @@
         }
 
         function resetDatabase() {
-            if (confirm("Biztosan törlöd a teljes adatbázist?")) {
-                db = [];
-                localStorage.removeItem('tm26_db_v162');
+            if (confirm("Biztosan visszaállítod az alapértelmezett adatbázist?")) {
+                db = JSON.parse(JSON.stringify(defaultDB));
+                saveToLocalStorage();
                 currentCountryIdx = 0; currentLeagueIdx = 0; currentTeamIdx = 0;
                 updateEditorUI();
-                showToast("🗑️ Adatbázis teljesen törölve!");
+                showToast("🔄 Alapértelmezett adatbázis betöltve!");
             }
         }
     </script>
