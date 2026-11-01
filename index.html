@@ -39,7 +39,7 @@
         #toast-notification {
             position: fixed; top: 15px; left: 50%; transform: translateX(-50%) translateY(-100px);
             background: rgba(16, 185, 129, 0.95); color: #ffffff; padding: 8px 16px; border-radius: 10px;
-            font-weight: 700; font-size: 0.8rem; z-index: 20000; box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+            font-weight: 700; font-size: 0.8rem; z-index: 30000; box-shadow: 0 5px 20px rgba(0,0,0,0.5);
             transition: transform 0.3s ease; backdrop-filter: blur(5px);
         }
         #toast-notification.show { transform: translateX(-50%) translateY(0); }
@@ -65,6 +65,25 @@
         .header { text-align: center; margin-bottom: 8px; width: 100%; display: flex; flex-direction: column; align-items: center; }
         .main-title { font-family: var(--font-title); font-size: 1.15rem; font-weight: 900; color: #ffffff; letter-spacing: 1px; text-transform: uppercase; }
 
+        .nav-row {
+            display: flex; align-items: center; justify-content: space-between;
+            background: rgba(9, 13, 22, 0.6); border: 1px solid var(--card-border);
+            border-radius: 8px; padding: 4px 8px; width: 100%; margin-bottom: 4px;
+        }
+        .nav-btn {
+            background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--logo-green); width: 22px; height: 22px; border-radius: 5px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+        }
+        .nav-btn:hover { background: var(--logo-green); color: #ffffff; }
+        .nav-label { font-weight: 700; font-size: 0.75rem; color: #ffffff; display: flex; align-items: center; gap: 5px; text-align: center; }
+        
+        .emblem-container {
+            width: 100%; background: rgba(9, 13, 22, 0.7); border: 1px solid var(--card-border);
+            border-radius: 10px; padding: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 2px 0 4px 0;
+        }
+        .team-emblem-svg { width: 38px; height: 38px; margin-bottom: 2px; filter: drop-shadow(0 3px 8px rgba(16, 185, 129, 0.3)); }
+
         .button-group { width: 100%; display: flex; flex-direction: column; gap: 4px; margin-top: 4px; }
         .btn {
             width: 100%; padding: 7px 10px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.05);
@@ -75,6 +94,7 @@
         .btn-primary:hover { background: var(--logo-green-hover); transform: translateY(-1px); }
         .btn-secondary { background: var(--btn-grey); color: var(--text-main); }
         .btn-secondary:hover { background: var(--btn-grey-hover); border-color: rgba(16, 185, 129, 0.3); transform: translateY(-1px); color: #ffffff; }
+        .btn-danger { background: var(--btn-red); color: #ffffff; }
 
         .dashboard-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; width: 100%; margin-top: 6px; }
         .dashboard-card {
@@ -88,14 +108,18 @@
         .dashboard-card.featured { grid-column: span 2; background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(17, 24, 39, 0.96)); border-color: var(--logo-green); }
 
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); display: flex; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(6px); }
+        
+        /* Speciális magasabb z-index a meccs közbeni taktikához/cseréhez */
+        #tactics-formation-modal { z-index: 5000; }
+
         .modal-card { background: var(--card-bg); border: 1px solid var(--logo-green); border-radius: 16px; padding: 14px; width: 92%; max-width: 380px; display: flex; flex-direction: column; gap: 6px; box-shadow: 0 20px 40px rgba(0,0,0,0.8); }
         .modal-title { font-family: var(--font-title); font-size: 0.95rem; font-weight: 800; color: #ffffff; text-align: center; }
+        .modal-input { background: rgba(9, 13, 22, 0.9); border: 1px solid var(--card-border); padding: 6px 8px; border-radius: 6px; color: #ffffff; font-size: 0.78rem; outline: none; width: 100%; }
 
         .tabs-row { display: flex; gap: 4px; width: 100%; margin-bottom: 6px; }
         .tab-btn { flex: 1; padding: 6px 2px; font-size: 0.65rem; font-weight: 700; background: var(--btn-grey); border: 1px solid rgba(255,255,255,0.05); color: var(--text-muted); border-radius: 6px; cursor: pointer; text-align: center; }
         .tab-btn.active { background: var(--logo-green); color: #ffffff; border-color: var(--logo-green); }
 
-        /* VIZUÁLIS FOCI PÁLYA STÍLUS */
         .pitch-container {
             width: 100%; height: 260px; background: #15803d; border: 2px solid #ffffff; border-radius: 10px;
             position: relative; overflow: hidden; background-image: repeating-linear-gradient(0deg, #15803d, #15803d 20px, #166534 20px, #166534 40px);
@@ -103,24 +127,19 @@
         }
         .pitch-line-center { position: absolute; top: 50%; left: 0; width: 100%; height: 2px; background: rgba(255,255,255,0.4); }
         .pitch-circle-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 60px; height: 60px; border: 2px solid rgba(255,255,255,0.4); border-radius: 50%; }
-        
         .pitch-row { display: flex; justify-content: space-around; width: 100%; z-index: 2; }
         .pitch-player-card {
             background: rgba(9, 13, 22, 0.88); border: 1px solid var(--logo-green); border-radius: 6px;
             padding: 2px 4px; text-align: center; font-size: 0.58rem; width: 55px; box-shadow: 0 4px 8px rgba(0,0,0,0.5);
-            cursor: pointer; transition: transform 0.2s;
         }
-        .pitch-player-card:hover { transform: scale(1.08); border-color: #ffffff; }
         .pitch-player-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 700; color: #fff; }
         .pitch-player-ovr { font-size: 0.55rem; color: var(--logo-green); font-weight: 800; }
 
-        /* MECCS ÉLŐ STÍLUS */
         .match-score-board {
             background: rgba(9, 13, 22, 0.9); border: 1px solid var(--card-border); border-radius: 10px;
             padding: 10px; display: flex; justify-content: space-around; align-items: center; margin-bottom: 6px;
         }
         .match-team-box { font-family: var(--font-title); font-size: 0.8rem; font-weight: 800; width: 35%; text-align: center; }
-        .match-timer-box { text-align: center; }
         .match-clock { font-family: var(--font-title); font-size: 1.1rem; font-weight: 900; color: var(--logo-green); }
         .match-feed { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 6px; height: 140px; overflow-y: auto; font-size: 0.65rem; display: flex; flex-direction: column; gap: 4px; }
         .feed-item { padding: 3px 6px; border-radius: 4px; background: rgba(255,255,255,0.04); }
@@ -128,15 +147,16 @@
         .feed-item.card { background: rgba(239, 68, 68, 0.2); border: 1px solid var(--btn-red); }
 
         .squad-list { width: 100%; margin-top: 4px; max-height: 130px; overflow-y: auto; display: flex; flex-direction: column; gap: 3px; }
-        .player-row { background: rgba(255, 255, 255, 0.04); padding: 5px 8px; border-radius: 5px; font-size: 0.68rem; display: flex; justify-content: space-between; align-items: center; color: var(--text-main); cursor: pointer; }
-        .player-row:hover { background: rgba(16, 185, 129, 0.1); }
-        .modal-input { background: rgba(9, 13, 22, 0.9); border: 1px solid var(--card-border); padding: 6px 8px; border-radius: 6px; color: #ffffff; font-size: 0.78rem; outline: none; width: 100%; }
+        .player-row { background: rgba(255, 255, 255, 0.04); padding: 5px 8px; border-radius: 5px; font-size: 0.68rem; display: flex; justify-content: space-between; align-items: center; color: var(--text-main); }
+        
+        .slot-card { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 8px; padding: 6px 8px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: all 0.2s; }
+        .slot-card:hover { background: rgba(16, 185, 129, 0.15); border-color: var(--logo-green); }
     </style>
 </head>
 <body>
 
     <div id="toast-notification">Művelet sikeres!</div>
-    <div class="version-badge">v1.9.0</div>
+    <div class="version-badge">v1.9.2</div>
 
     <!-- Főmenü -->
     <div id="main-menu" class="card">
@@ -146,8 +166,9 @@
         </div>
         <div class="button-group">
             <button class="btn btn-primary" onclick="openNewGameModeModal()"><span>Új Játék</span><i class="fa-solid fa-soccer-ball btn-icon"></i></button>
-            <button class="btn btn-secondary" onclick="showToast('Üres slotok')"><span>Játék Betöltése</span><i class="fa-solid fa-folder-open btn-icon" style="color: #fbbf24;"></i></button>
-            <button class="btn btn-secondary" onclick="showToast('Beállítások')"><span>Beállítások</span><i class="fa-solid fa-gear btn-icon" style="color: var(--logo-green);"></i></button>
+            <button class="btn btn-secondary" onclick="openSlotModal()"><span>Játék Betöltése</span><i class="fa-solid fa-folder-open btn-icon" style="color: #fbbf24;"></i></button>
+            <button class="btn btn-secondary" onclick="openSettingsModal()"><span>Beállítások</span><i class="fa-solid fa-gear btn-icon" style="color: var(--logo-green);"></i></button>
+            <button class="btn btn-secondary" onclick="openEditor()"><span>Szerkesztő & Másolás/Import</span><i class="fa-solid fa-wrench btn-icon" style="color: #38bdf8;"></i></button>
         </div>
     </div>
 
@@ -160,6 +181,24 @@
                 <button class="btn btn-primary" onclick="openTeamSelectView()"><span>Bajnokság Mód</span><i class="fa-solid fa-trophy btn-icon"></i></button>
             </div>
             <div style="margin-top: 4px;"><button class="btn btn-secondary" onclick="closeNewGameModeModal()">Mégse</button></div>
+        </div>
+    </div>
+
+    <!-- Játék Betöltése Slotok Modál -->
+    <div id="slot-modal" class="modal-overlay hidden">
+        <div class="modal-card">
+            <div class="modal-title">💾 Játék Betöltése Slotból</div>
+            <div style="display: flex; flex-direction: column; gap: 4px;" id="slots-container"></div>
+            <div style="margin-top: 2px;"><button class="btn btn-secondary" onclick="closeSlotModal()">Mégse</button></div>
+        </div>
+    </div>
+
+    <!-- Beállítások Modál -->
+    <div id="settings-modal" class="modal-overlay hidden">
+        <div class="modal-card">
+            <div class="modal-title">⚙️ Beállítások</div>
+            <div style="font-size: 0.68rem; color: var(--text-muted); text-align: center; padding: 15px 0;">Itt hamarosan további beállítások kapnak helyet.</div>
+            <div class="button-group"><button class="btn btn-secondary" onclick="closeSettingsModal()">Bezárás</button></div>
         </div>
     </div>
 
@@ -227,32 +266,25 @@
         </div>
     </div>
 
-    <!-- FELÁLLÁS ÉS TAKTIKA MODÁL (Vizuális felállás, Kezdő/Cserék, Taktika) -->
+    <!-- FELÁLLÁS & TAKTIKA MODÁL -->
     <div id="tactics-formation-modal" class="modal-overlay hidden">
         <div class="modal-card" style="max-width: 380px;">
             <div class="modal-title">⚽ Felállás & Taktika</div>
             <div class="tabs-row">
-                <button class="tab-btn active" id="tab-btn-pitch" onclick="switchTacticsTab('pitch')">1. Felállás (Vizuális)</button>
+                <button class="tab-btn active" id="tab-btn-pitch" onclick="switchTacticsTab('pitch')">1. Felállás</button>
                 <button class="tab-btn" id="tab-btn-squad" onclick="switchTacticsTab('squad')">2. Kezdő & 7 Csere</button>
                 <button class="tab-btn" id="tab-btn-tactics" onclick="switchTacticsTab('tactics')">3. Taktika</button>
             </div>
 
-            <!-- 1. VIZUÁLIS FELÁLLÁS FÜL (FIFA STÍLUS) -->
             <div id="tab-content-pitch" style="display:flex; flex-direction:column; gap:6px;">
                 <div style="display:flex; justify-content:space-between; align-items:center;">
                     <span style="font-size:0.65rem; color:var(--text-muted);">Formáció váltás:</span>
                     <select id="formation-select-dropdown" class="modal-input" style="width:130px; padding:2px 4px;" onchange="changeTeamFormation(this.value)">
-                        <option value="4-4-2">4-4-2</option>
-                        <option value="4-3-3">4-3-3</option>
-                        <option value="4-2-3-1">4-2-3-1</option>
-                        <option value="3-5-2">3-5-2</option>
-                        <option value="5-3-2">5-3-2</option>
+                        <option value="4-4-2">4-4-2</option><option value="4-3-3">4-3-3</option><option value="4-2-3-1">4-2-3-1</option><option value="3-5-2">3-5-2</option><option value="5-3-2">5-3-2</option>
                     </select>
                 </div>
                 <div class="pitch-container" id="visual-pitch">
-                    <div class="pitch-line-center"></div>
-                    <div class="pitch-circle-center"></div>
-                    <!-- Pályán lévő sorok kártyákkal -->
+                    <div class="pitch-line-center"></div><div class="pitch-circle-center"></div>
                     <div class="pitch-row" id="pitch-row-fwd"></div>
                     <div class="pitch-row" id="pitch-row-mid"></div>
                     <div class="pitch-row" id="pitch-row-def"></div>
@@ -260,15 +292,13 @@
                 </div>
             </div>
 
-            <!-- 2. KEZDŐ ÉS 7 CSERE FÜL -->
             <div id="tab-content-squad" class="hidden" style="max-height: 240px; overflow-y: auto;">
-                <div style="font-size: 0.65rem; color: var(--logo-green); font-weight: 700; margin-bottom: 2px;">Kezdő 11 (Pályán):</div>
+                <div style="font-size: 0.65rem; color: var(--logo-green); font-weight: 700; margin-bottom: 2px;">Kezdő 11 (Kattints a cseréhez):</div>
                 <div id="lineup-starters-list" class="squad-list" style="max-height: 100px; margin-bottom: 6px;"></div>
                 <div style="font-size: 0.65rem; color: #fbbf24; font-weight: 700; margin-bottom: 2px;">Regisztrált Cserék (Max 7 fő):</div>
                 <div id="lineup-subs-list" class="squad-list" style="max-height: 90px;"></div>
             </div>
 
-            <!-- 3. TAKTIKA FÜL -->
             <div id="tab-content-tactics" class="hidden" style="display: flex; flex-direction: column; gap: 6px;">
                 <label style="font-size: 0.68rem; color: var(--text-muted);">Csapat Mentalitása:</label>
                 <select id="tactics-mentality" class="modal-input" onchange="saveTacticsSettings()">
@@ -282,28 +312,22 @@
         </div>
     </div>
 
-    <!-- ÉLŐ MECCS SZIMULÁCIÓ MODÁL (1 mp = 1 perc) -->
+    <!-- ÉLŐ MECCS SZIMULÁCIÓ -->
     <div id="next-match-modal" class="modal-overlay hidden">
         <div class="modal-card" style="max-width: 360px;">
             <div class="modal-title" id="sim-modal-title">🔴 Élő Mérkőzés</div>
-            
             <div class="match-score-board">
                 <div class="match-team-box" id="sim-home-team">Hazai</div>
-                <div class="match-timer-box">
+                <div class="match-timer-box" style="text-align:center;">
                     <div class="match-clock" id="sim-clock">00'</div>
                     <div style="font-size:0.9rem; font-weight:900; color:#fff;" id="sim-score">0 - 0</div>
                 </div>
                 <div class="match-team-box" id="sim-away-team">Vendég</div>
             </div>
-
-            <div class="match-feed" id="sim-match-feed">
-                <div class="feed-item">A mérkőzés hamarosan kezdetét veszi...</div>
-            </div>
-
+            <div class="match-feed" id="sim-match-feed"><div class="feed-item">Mérkőzésre készen áll a csapat!</div></div>
             <div style="display:flex; gap:4px; margin-top:4px;">
-                <button class="btn btn-secondary" style="padding:4px; font-size:0.65rem;" onclick="openTacticsFormationModal()">⚙️ Taktika / Csere</button>
+                <button class="btn btn-primary" style="padding:6px; font-size:0.7rem;" onclick="openTacticsFormationModal()">⚙️ Taktika / Csere menü</button>
             </div>
-
             <div class="button-group" style="margin-top:4px;">
                 <button class="btn btn-primary" id="btn-start-sim" onclick="startLiveMatchSimulation()">▶ Meccs Indítása</button>
                 <button class="btn btn-secondary hidden" id="btn-close-sim" onclick="closeNextMatchModalAfterSim()">Folytatás (Következő forduló)</button>
@@ -311,14 +335,64 @@
         </div>
     </div>
 
+    <!-- ADATBÁZIS SZERKESZTŐ -->
+    <div id="editor-view" class="card editor-card hidden">
+        <div class="header" style="margin-bottom: 4px;">
+            <div class="studio-tag">Adatbázis Szerkesztő</div>
+            <h1 class="main-title" style="font-size: 1rem;">Szerkesztő</h1>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px; width: 100%; margin-bottom: 4px;">
+            <div class="nav-row" style="margin-bottom:0;">
+                <button class="nav-btn" onclick="changeCountry(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+                <div class="nav-label" id="lbl-country">Ország</div>
+                <button class="nav-btn" onclick="changeCountry(1)"><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+            <div class="nav-row" style="margin-bottom:0;">
+                <button class="nav-btn" onclick="changeLeague(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+                <div class="nav-label" id="lbl-league">Bajnokság</div>
+                <button class="nav-btn" onclick="changeLeague(1)"><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+            <div class="emblem-container" style="margin-bottom:0; padding:4px;">
+                <div class="nav-row" style="background: transparent; border: none; margin-bottom: 2px; padding: 0;">
+                    <button class="nav-btn" onclick="changeTeam(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+                    <div class="nav-label" id="lbl-team" style="font-size: 0.78rem; color: var(--logo-green);">Csapat</div>
+                    <button class="nav-btn" onclick="changeTeam(1)"><i class="fa-solid fa-chevron-right"></i></button>
+                </div>
+                <div id="editor-emblem-box" class="team-emblem-svg" style="width:28px; height:28px;"></div>
+                <div style="width: 100%; border-top: 1px solid rgba(255,255,255,0.08); margin-top: 2px; padding-top: 2px;">
+                    <div style="font-size: 0.6rem; color: var(--text-muted); margin-bottom: 2px;" id="squad-title-label">Keret:</div>
+                    <div id="squad-container" class="squad-list" style="max-height: 90px;"></div>
+                </div>
+            </div>
+            <div class="button-group" style="margin-top:2px;">
+                <button class="btn btn-primary" style="background:#38bdf8; border-color:#38bdf8; padding:5px; font-size:0.68rem;" onclick="downloadDatabaseJSON()"><span>📋 Exportálás (Másolás)</span></button>
+                <button class="btn btn-primary" style="background:#fbbf24; border-color:#fbbf24; color:#090d16; padding:5px; font-size:0.68rem;" onclick="document.getElementById('import-db-file').click()"><span>📂 Betöltés</span></button>
+                <input type="file" id="import-db-file" accept=".json,.txt" class="hidden" onchange="importDatabaseJSON(event)">
+            </div>
+        </div>
+        <div class="button-group">
+            <button class="btn btn-secondary" onclick="closeEditor()">Vissza a Főmenübe</button>
+        </div>
+    </div>
+
+    <!-- EXPORTÁLÁS / MÁSOLÁS MODÁL -->
+    <div id="export-modal" class="modal-overlay hidden">
+        <div class="modal-card">
+            <div class="modal-title">📋 Adatbázis Export</div>
+            <textarea id="export-textarea" class="modal-input" style="height: 120px; font-size: 0.65rem; resize: none;" readonly></textarea>
+            <div style="display: flex; gap: 4px;">
+                <button class="btn btn-primary" onclick="copyExportText()">📋 Másolás Vágólapra</button>
+                <button class="btn btn-secondary" onclick="closeExportModal()">Bezárás</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        let splashDismissed = true;
         function showToast(msg) {
             let toast = document.getElementById('toast-notification');
             if (toast) { toast.innerText = msg; toast.classList.add('show'); setTimeout(() => { toast.classList.remove('show'); }, 2000); }
         }
 
-        // ALAP KITALÁLT ANGOL LEAGUE GENERÁTORA
         function generateFictionalLeague() {
             const firstNames = ["Jack", "Oliver", "Harry", "Mason", "Liam", "Ethan", "Callum", "Noah", "George", "Charlie", "Jacob", "Alfie", "Freddie", "Archie", "Arthur", "Leo", "Oscar", "Henry", "Theo", "Joshua"];
             const lastNames = ["Sterling", "Vance", "Thorne", "Reed", "Hayes", "Bennett", "Drake", "Shaw", "Fletcher", "Mercer", "Sinclair", "Bramwell", "Cross", "Wilder", "Kingsley", "Vane", "Blackwood", "Holloway"];
@@ -354,11 +428,12 @@
 
         let db = [];
         try {
-            let savedDB = localStorage.getItem('tm26_db_v190');
+            let savedDB = localStorage.getItem('tm26_db_v192');
             if (savedDB) { db = JSON.parse(savedDB); } 
-            else { db = generateFictionalLeague(); localStorage.setItem('tm26_db_v190', JSON.stringify(db)); }
+            else { db = generateFictionalLeague(); localStorage.setItem('tm26_db_v192', JSON.stringify(db)); }
         } catch (e) { db = generateFictionalLeague(); }
 
+        let currentCountryIdx = 0, currentLeagueIdx = 0, currentTeamIdx = 0;
         let selectedTeamName = null;
         let currentRound = 1;
         let standingsData = [];
@@ -366,6 +441,90 @@
         let currentMatchRoundView = 1;
         let teamTactics = { mentality: "Semleges" };
         let subsUsedInCurrentMatch = 0;
+        let selectedPlayerToSubOut = null; // Cseréhez kiválasztott játékos
+
+        function saveToLocalStorage() {
+            localStorage.setItem('tm26_db_v192', JSON.stringify(db));
+        }
+
+        function openSlotModal() {
+            let container = document.getElementById('slots-container');
+            container.innerHTML = '';
+            for (let i = 1; i <= 3; i++) {
+                let slotData = localStorage.getItem(`tm26_slot_${i}`);
+                let card = document.createElement('div');
+                card.className = 'slot-card';
+                card.innerHTML = `<div style="display:flex; flex-direction:column;"><span style="font-weight:700; color:#fff;">Slot ${i}</span><span style="font-size:0.6rem; color:var(--text-muted);">${slotData ? 'Mentett játékállás' : 'Üres slot'}</span></div>`;
+                card.onclick = () => {
+                    showToast(slotData ? `Slot ${i} betöltve!` : `Nincs mentés a(z) ${i}. slotban.`);
+                    document.getElementById('slot-modal').classList.add('hidden');
+                };
+                container.appendChild(card);
+            }
+            document.getElementById('slot-modal').classList.remove('hidden');
+        }
+        function closeSlotModal() { document.getElementById('slot-modal').classList.add('hidden'); }
+        function openSettingsModal() { document.getElementById('settings-modal').classList.remove('hidden'); }
+        function closeSettingsModal() { document.getElementById('settings-modal').classList.add('hidden'); }
+
+        function openEditor() {
+            document.getElementById('main-menu').classList.add('hidden');
+            document.getElementById('editor-view').classList.remove('hidden');
+            updateEditorUI();
+        }
+        function closeEditor() {
+            document.getElementById('editor-view').classList.add('hidden');
+            document.getElementById('main-menu').classList.remove('hidden');
+        }
+        function updateEditorUI() {
+            let c = db[currentCountryIdx];
+            let l = c.leagues[currentLeagueIdx];
+            let t = l && l.teams ? l.teams[currentTeamIdx] : null;
+
+            document.getElementById('lbl-country').innerText = c.country;
+            document.getElementById('lbl-league').innerText = l ? l.name : "";
+            document.getElementById('lbl-team').innerText = t ? t.name : "";
+
+            let squadContainer = document.getElementById('squad-container');
+            squadContainer.innerHTML = '';
+            if (t && t.players) {
+                t.players.forEach(p => {
+                    let row = document.createElement('div');
+                    row.className = 'player-row';
+                    row.innerHTML = `<span>#${p.number} ${p.name} [${p.pos}]</span><span style="color:var(--logo-green);">OVR: ${p.ovr}</span>`;
+                    squadContainer.appendChild(row);
+                });
+            }
+        }
+        function changeCountry(dir) { currentCountryIdx = (currentCountryIdx + dir + db.length) % db.length; updateEditorUI(); }
+        function changeLeague(dir) { let leags = db[currentCountryIdx].leagues; currentLeagueIdx = (currentLeagueIdx + dir + leags.length) % leags.length; updateEditorUI(); }
+        function changeTeam(dir) { let teams = db[currentCountryIdx].leagues[currentLeagueIdx].teams; currentTeamIdx = (currentTeamIdx + dir + teams.length) % teams.length; updateEditorUI(); }
+
+        function downloadDatabaseJSON() {
+            let jsonString = JSON.stringify(db, null, 2);
+            document.getElementById('export-textarea').value = jsonString;
+            document.getElementById('export-modal').classList.remove('hidden');
+        }
+        function closeExportModal() { document.getElementById('export-modal').classList.add('hidden'); }
+        function copyExportText() {
+            navigator.clipboard.writeText(document.getElementById('export-textarea').value);
+            showToast("📋 Sikeresen a vágólapra másolva!");
+            closeExportModal();
+        }
+        function importDatabaseJSON(event) {
+            let file = event.target.files[0];
+            if (!file) return;
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    db = JSON.parse(e.target.result);
+                    saveToLocalStorage();
+                    updateEditorUI();
+                    showToast("📂 Adatbázis betöltve!");
+                } catch(err) { showToast("❌ Hibás JSON fájl!"); }
+            };
+            reader.readAsText(file);
+        }
 
         function openNewGameModeModal() { document.getElementById('new-game-mode-modal').classList.remove('hidden'); }
         function closeNewGameModeModal() { document.getElementById('new-game-mode-modal').classList.add('hidden'); }
@@ -399,43 +558,31 @@
             showToast(`✅ Csapat kiválasztva: ${teamName}`);
         }
 
-        // BERGER-TÁBLÁZAT ALAPÚ ÉLETHŰ SORSOLÁS (Nincsenek felváltva váltakozó meccsek)
         function initBergerLeagueSeason() {
             let teams = db[0].leagues[0].teams.map(t => t.name);
             standingsData = teams.map(name => ({ name, p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, pts: 0 }));
 
             let n = teams.length;
-            let totalRounds = (n - 1) * 2;
-            let matchesPerRound = n / 2;
-
             let roundTeams = [...teams];
             fixturesData = [];
 
-            // Első félszezon (1-19. forduló) Berger táblázattal
             for (let r = 0; r < n - 1; r++) {
                 let roundMatches = [];
-                for (let i = 0; i < matchesPerRound; i++) {
+                for (let i = 0; i < n / 2; i++) {
                     let home = roundTeams[i];
                     let away = roundTeams[n - 1 - i];
-                    // A meccsek felváltva kapnak otthoni jogot a Berger minta alapján
-                    if (i === 0 && r % 2 === 1) {
-                        roundMatches.push({ home: away, away: home, played: false, hScore: null, aScore: null });
-                    } else if (i !== 0 && (i + r) % 2 === 1) {
+                    if ((i === 0 && r % 2 === 1) || (i !== 0 && (i + r) % 2 === 1)) {
                         roundMatches.push({ home: away, away: home, played: false, hScore: null, aScore: null });
                     } else {
                         roundMatches.push({ home, away, played: false, hScore: null, aScore: null });
                     }
                 }
                 fixturesData.push(roundMatches);
-                // Csapatok forgatása (az első fix)
                 roundTeams.splice(1, 0, roundTeams.pop());
             }
 
-            // Második félszezon (Visszavágók, 20-38. forduló)
             for (let r = 0; r < n - 1; r++) {
-                let returnRoundMatches = fixturesData[r].map(m => ({
-                    home: m.away, away: m.home, played: false, hScore: null, aScore: null
-                }));
+                let returnRoundMatches = fixturesData[r].map(m => ({ home: m.away, away: m.home, played: false, hScore: null, aScore: null }));
                 fixturesData.push(returnRoundMatches);
             }
         }
@@ -451,7 +598,6 @@
             document.getElementById('main-menu').classList.remove('hidden');
         }
 
-        // 1. TABELLA
         function openStandingsModal() {
             let tbody = document.getElementById('standings-tbody');
             tbody.innerHTML = '';
@@ -466,25 +612,17 @@
         }
         function closeStandingsModal() { document.getElementById('standings-modal').classList.add('hidden'); }
 
-        // 2. MECCSEK
-        function openMatchesModal() {
-            currentMatchRoundView = currentRound;
-            renderMatchRound();
-            document.getElementById('matches-modal').classList.remove('hidden');
-        }
+        function openMatchesModal() { currentMatchRoundView = currentRound; renderMatchRound(); document.getElementById('matches-modal').classList.remove('hidden'); }
         function closeMatchesModal() { document.getElementById('matches-modal').classList.add('hidden'); }
         function changeMatchRound(dir) {
-            currentMatchRoundView += dir;
-            if (currentMatchRoundView < 1) currentMatchRoundView = 38;
-            if (currentMatchRoundView > 38) currentMatchRoundView = 1;
+            currentMatchRoundView = Math.max(1, Math.min(38, currentMatchRoundView + dir));
             renderMatchRound();
         }
         function renderMatchRound() {
             document.getElementById('lbl-match-round').innerText = `${currentMatchRoundView}. Forduló`;
             let container = document.getElementById('matches-container');
             container.innerHTML = '';
-            let matches = fixturesData[currentMatchRoundView - 1];
-            matches.forEach(m => {
+            fixturesData[currentMatchRoundView - 1].forEach(m => {
                 let div = document.createElement('div');
                 div.className = 'player-row';
                 let res = m.played ? `${m.hScore} - ${m.aScore}` : 'vs';
@@ -493,7 +631,6 @@
             });
         }
 
-        // 3. CSAPATOM KERET
         function openTeamSquadModal() {
             let team = db[0].leagues[0].teams.find(t => t.name === selectedTeamName);
             let container = document.getElementById('dashboard-squad-container');
@@ -501,14 +638,13 @@
             team.players.forEach(p => {
                 let row = document.createElement('div');
                 row.className = 'player-row';
-                row.innerHTML = `<span><strong>#${p.number} ${p.name}</strong> [${p.pos}]</span><span style="color:var(--logo-green)">OVR: ${p.ovr}</span>`;
+                row.innerHTML = `<span>#${p.number} ${p.name} [${p.pos}]</span><span style="color:var(--logo-green)">OVR: ${p.ovr}</span>`;
                 container.appendChild(row);
             });
             document.getElementById('team-squad-modal').classList.remove('hidden');
         }
         function closeTeamSquadModal() { document.getElementById('team-squad-modal').classList.add('hidden'); }
 
-        // 4. FELÁLLÁS & TAKTIKA (VIZUÁLIS FOCI PÁLYA)
         function openTacticsFormationModal() {
             switchTacticsTab('pitch');
             renderVisualPitch();
@@ -536,13 +672,8 @@
         function renderVisualPitch() {
             let team = db[0].leagues[0].teams.find(t => t.name === selectedTeamName);
             document.getElementById('formation-select-dropdown').value = team.formation || "4-4-2";
-
             let starters = team.players.slice(0, 11);
-            let fwd = starters.filter(p => p.pos === 'ATT');
-            let mid = starters.filter(p => p.pos === 'MID');
-            let def = starters.filter(p => p.pos === 'DEF');
-            let gk = starters.filter(p => p.pos === 'GK');
-
+            
             function populateRow(rowId, list) {
                 let row = document.getElementById(rowId);
                 row.innerHTML = '';
@@ -553,47 +684,61 @@
                     row.appendChild(card);
                 });
             }
-
-            populateRow('pitch-row-fwd', fwd.length ? fwd : starters.slice(8, 11));
-            populateRow('pitch-row-mid', mid.length ? mid : starters.slice(4, 8));
-            populateRow('pitch-row-def', def.length ? def : starters.slice(1, 4));
-            populateRow('pitch-row-gk', gk.length ? gk : [starters[0]]);
+            populateRow('pitch-row-fwd', starters.slice(8, 11));
+            populateRow('pitch-row-mid', starters.slice(4, 8));
+            populateRow('pitch-row-def', starters.slice(1, 4));
+            populateRow('pitch-row-gk', [starters[0]]);
         }
 
         function renderSquadLists() {
             let team = db[0].leagues[0].teams.find(t => t.name === selectedTeamName);
             let startersContainer = document.getElementById('lineup-starters-list');
             let subsContainer = document.getElementById('lineup-subs-list');
+            startersContainer.innerHTML = ''; subsContainer.innerHTML = '';
 
-            startersContainer.innerHTML = '';
-            subsContainer.innerHTML = '';
-
-            let starters = team.players.slice(0, 11);
-            let subs = team.players.slice(11, 18); // Szigorúan 7 csere a szabályzat szerint
-
-            starters.forEach(p => {
+            // Kezdő 11 listázása (Kattintásra kiválasztható a cseréhez)
+            team.players.slice(0, 11).forEach((p, idx) => {
                 let div = document.createElement('div');
                 div.className = 'player-row';
-                div.innerHTML = `<span>#${p.number} ${p.name} [${p.pos}]</span><span style="color:var(--logo-green)">${p.ovr}</span>`;
+                let isSelected = selectedPlayerToSubOut === idx;
+                if (isSelected) div.style.borderColor = 'var(--logo-green)';
+                div.innerHTML = `<span>#${p.number} ${p.name} [${p.pos}] ${isSelected ? '⭐ (Leküldendő)' : ''}</span><button class="btn btn-secondary" style="padding:2px 5px; font-size:0.55rem; width:auto;" onclick="selectStarterForSub(${idx})">${isSelected ? 'Kijelölve' : 'Leküld'}</button>`;
                 startersContainer.appendChild(div);
             });
 
-            subs.forEach((p, idx) => {
+            // Cserék listázása (Max 7 fő)
+            team.players.slice(11, 18).forEach((p, subIdx) => {
+                let actualIdx = 11 + subIdx;
                 let div = document.createElement('div');
                 div.className = 'player-row';
-                div.innerHTML = `<span>#${p.number} ${p.name} [${p.pos}]</span><button class="btn btn-primary" style="padding:2px 5px; font-size:0.55rem; width:auto;" onclick="makeSubstitution(${idx})">Csere be</button>`;
+                div.innerHTML = `<span>#${p.number} ${p.name} [${p.pos}]</span><button class="btn btn-primary" style="padding:2px 5px; font-size:0.55rem; width:auto;" onclick="executeSubstitution(${actualIdx})">Becserél</button>`;
                 subsContainer.appendChild(div);
             });
         }
 
-        function makeSubstitution(subIdx) {
-            if (subsUsedInCurrentMatch >= 3) {
-                showToast("❌ Már kihasználtad mind a 3 cserédet!");
-                return;
-            }
-            subsUsedInCurrentMatch++;
-            showToast(`🔄 Csere végrehajtva! (${subsUsedInCurrentMatch}/3)`);
+        function selectStarterForSub(idx) {
+            selectedPlayerToSubOut = idx;
+            showToast(`Kijelölve cserére: ${db[0].leagues[0].teams.find(t => t.name === selectedTeamName).players[idx].name}`);
             renderSquadLists();
+        }
+
+        function executeSubstitution(subIndex) {
+            if (subsUsedInCurrentMatch >= 3) { showToast("❌ Már kihasználtad mind a 3 cserédet!"); return; }
+            if (selectedPlayerToSubOut === null) { showToast("⚠️ Előbb jelöld ki a pályáról leküldendő játékost!"); return; }
+
+            let team = db[0].leagues[0].teams.find(t => t.name === selectedTeamName);
+            
+            // Megcseréljük a kezdőt a cserével a tömbben
+            let temp = team.players[selectedPlayerToSubOut];
+            team.players[selectedPlayerToSubOut] = team.players[subIndex];
+            team.players[subIndex] = temp;
+
+            subsUsedInCurrentMatch++;
+            selectedPlayerToSubOut = null;
+            renderSquadLists();
+            renderVisualPitch();
+            saveToLocalStorage();
+            showToast(`🔄 Sikeres csere! (${subsUsedInCurrentMatch}/3)`);
         }
 
         function saveTacticsSettings() {
@@ -601,26 +746,19 @@
             showToast("💾 Taktika frissítve!");
         }
 
-        // 5. ÉLŐ MECCS SZIMULÁCIÓ (1 MP = 1 PERC)
-        let simInterval = null;
-        let simMinute = 0;
-        let liveHGoals = 0, liveAGoals = 0;
-
+        let simInterval = null, simMinute = 0, liveHGoals = 0, liveAGoals = 0;
         function openNextMatchModal() {
             if (currentRound > 38) { showToast("🏆 A bajnokság véget ért!"); return; }
-            let matches = fixturesData[currentRound - 1];
-            let userMatch = matches.find(m => m.home === selectedTeamName || m.away === selectedTeamName);
-
+            let userMatch = fixturesData[currentRound - 1].find(m => m.home === selectedTeamName || m.away === selectedTeamName);
             document.getElementById('sim-home-team').innerText = userMatch.home;
             document.getElementById('sim-away-team').innerText = userMatch.away;
             document.getElementById('sim-clock').innerText = "00'";
             document.getElementById('sim-score').innerText = "0 - 0";
             document.getElementById('sim-match-feed').innerHTML = '<div class="feed-item">Mérkőzésre készen áll a csapat!</div>';
-
             document.getElementById('btn-start-sim').classList.remove('hidden');
             document.getElementById('btn-close-sim').classList.add('hidden');
             subsUsedInCurrentMatch = 0;
-
+            selectedPlayerToSubOut = null;
             document.getElementById('next-match-modal').classList.remove('hidden');
         }
 
@@ -628,7 +766,6 @@
             document.getElementById('btn-start-sim').classList.add('hidden');
             let matches = fixturesData[currentRound - 1];
             let userMatch = matches.find(m => m.home === selectedTeamName || m.away === selectedTeamName);
-
             simMinute = 0; liveHGoals = 0; liveAGoals = 0;
             let feed = document.getElementById('sim-match-feed');
             feed.innerHTML = '<div class="feed-item">⚽ Sípjel! A mérkőzés megkezdődött.</div>';
@@ -636,62 +773,35 @@
             simInterval = setInterval(() => {
                 simMinute++;
                 document.getElementById('sim-clock').innerText = `${simMinute}'`;
-
-                // Gól események esélye a percek folyamán
                 if (Math.random() < 0.035) {
-                    if (Math.random() < 0.5) {
-                        liveHGoals++;
-                        feed.innerHTML += `<div class="feed-item goal">⚽ ${simMinute}' GÓL! ${userMatch.home} megtörte a jeget!</div>`;
-                    } else {
-                        liveAGoals++;
-                        feed.innerHTML += `<div class="feed-item goal">⚽ ${simMinute}' GÓL! ${userMatch.away} betalált!</div>`;
-                    }
+                    if (Math.random() < 0.5) { liveHGoals++; feed.innerHTML += `<div class="feed-item goal">⚽ ${simMinute}' GÓL! ${userMatch.home} talált be!</div>`; }
+                    else { liveAGoals++; feed.innerHTML += `<div class="feed-item goal">⚽ ${simMinute}' GÓL! ${userMatch.away} talált be!</div>`; }
                     document.getElementById('sim-score').innerText = `${liveHGoals} - ${liveAGoals}`;
                     feed.scrollTop = feed.scrollHeight;
                 }
-
-                // Lapok esélye
-                if (Math.random() < 0.015) {
-                    feed.innerHTML += `<div class="feed-item card">🟨 ${simMinute}' Sárga lapos figyelmeztetés!</div>`;
-                    feed.scrollTop = feed.scrollHeight;
-                }
-
                 if (simMinute >= 90) {
                     clearInterval(simInterval);
-                    feed.innerHTML += `<div class="feed-item">🏁 90' Sípszó! A mérkőzés véget ért.</div>`;
-                    feed.scrollTop = feed.scrollHeight;
+                    feed.innerHTML += `<div class="feed-item">🏁 90' Vége a mérkőzésnek!</div>`;
+                    userMatch.hScore = liveHGoals; userMatch.aScore = liveAGoals; userMatch.played = true;
 
-                    // Eredmény elmentése
-                    userMatch.hScore = liveHGoals;
-                    userMatch.aScore = liveAGoals;
-                    userMatch.played = true;
-
-                    // Többi meccs szimulálása automatikusan
                     matches.forEach(m => {
-                        if (!m.played) {
-                            m.hScore = Math.floor(Math.random() * 3);
-                            m.aScore = Math.floor(Math.random() * 3);
-                            m.played = true;
-                        }
+                        if (!m.played) { m.hScore = Math.floor(Math.random() * 3); m.aScore = Math.floor(Math.random() * 3); m.played = true; }
                         updateStandingsWithMatch(m);
                     });
-
                     currentRound++;
                     document.getElementById('dash-league-info').innerText = `Premier Division | Forduló: ${Math.min(currentRound, 38)}/38`;
                     document.getElementById('btn-close-sim').classList.remove('hidden');
                 }
-            }, 1000); // 1 másodperc = 1 perc a pályán!
+            }, 1000);
         }
 
         function updateStandingsWithMatch(m) {
             let hTeam = standingsData.find(st => st.name === m.home);
             let aTeam = standingsData.find(st => st.name === m.away);
             if (hTeam && aTeam) {
-                hTeam.p++; aTeam.p++;
-                hTeam.gf += m.hScore; hTeam.ga += m.aScore;
-                aTeam.gf += m.aScore; aTeam.ga += m.hScore;
+                hTeam.p++; aTeam.p++; hTeam.gf += m.hScore; hTeam.ga += m.aScore; aTeam.gf += m.aScore; aTeam.ga += m.hScore;
                 if (m.hScore > m.aScore) { hTeam.w++; hTeam.pts += 3; aTeam.l++; }
-                else if (m.hScore < m.aScore) { aTeam.w++; aTeam.pts += 3; hTeam.l++; }
+                else if (m.hScore < m.aScore) { aTeam.w++; hTeam.pts += 3; hTeam.l++; }
                 else { hTeam.d++; hTeam.pts += 1; aTeam.d++; aTeam.pts += 1; }
             }
         }
