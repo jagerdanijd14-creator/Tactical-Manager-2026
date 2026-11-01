@@ -289,7 +289,7 @@
             filter: drop-shadow(0 3px 8px rgba(16, 185, 129, 0.3));
         }
 
-        .squad-list { width: 100%; margin-top: 4px; max-height: 90px; overflow-y: auto; display: flex; flex-direction: column; gap: 3px; }
+        .squad-list { width: 100%; margin-top: 4px; max-height: 110px; overflow-y: auto; display: flex; flex-direction: column; gap: 3px; }
         .player-row { background: rgba(255, 255, 255, 0.04); padding: 5px 8px; border-radius: 5px; font-size: 0.68rem; display: flex; justify-content: space-between; align-items: center; color: var(--text-main); border: 1px solid transparent; cursor: pointer; transition: all 0.2s; }
         .player-row:hover { background: rgba(16, 185, 129, 0.1); border-color: var(--logo-green); }
 
@@ -331,7 +331,7 @@
 <body>
 
     <div id="toast-notification">Művelet sikeres!</div>
-    <div class="version-badge">v1.6.2</div>
+    <div class="version-badge">v1.7.0</div>
 
     <div id="splash-screen" onclick="startAppDirectly()">
         <img src="https://www.dropbox.com/scl/fi/b8p0linr5z3s5jf32pkxw/file_00000000e41881f49ae16355c8824db0.png?rlkey=gvhib7sumek2mm2g51vhqqd2k&st=vqichxld&raw=1" alt="Loading Logo" class="splash-logo">
@@ -418,7 +418,7 @@
                 </div>
                 <div id="editor-emblem-box" class="team-emblem-svg" style="width:28px; height:28px;"></div>
                 <div style="width: 100%; border-top: 1px solid rgba(255,255,255,0.08); margin-top: 2px; padding-top: 2px;">
-                    <div style="font-size: 0.6rem; color: var(--text-muted); margin-bottom: 2px;">Keret:</div>
+                    <div style="font-size: 0.6rem; color: var(--text-muted); margin-bottom: 2px;" id="squad-title-label">Keret:</div>
                     <div id="squad-container" class="squad-list">
                         <div style="font-size: 0.65rem; color: var(--text-muted); text-align: center;">Nincs csapat.</div>
                     </div>
@@ -436,7 +436,7 @@
                 <button class="btn btn-primary" style="background:#fbbf24; border-color:#fbbf24; color:#090d16; padding:5px; font-size:0.68rem;" onclick="document.getElementById('import-db-file').click()"><span>📂 Betöltés</span></button>
                 <input type="file" id="import-db-file" accept=".json,.txt" class="hidden" onchange="importDatabaseJSON(event)">
                 
-                <button class="btn btn-danger" style="padding:5px; font-size:0.68rem; grid-column: span 2;" onclick="resetDatabase()"><span>🗑️ Adatbázis Törlése</span></button>
+                <button class="btn btn-danger" style="padding:5px; font-size:0.68rem; grid-column: span 2;" onclick="resetDatabase()"><span>🗑️ Adatbázis Visszaállítása</span></button>
             </div>
         </div>
         <div class="button-group">
@@ -686,86 +686,176 @@
             `;
         }
 
-        // ALAPÉRTELMEZETT BEÉPÍTETT ADATBÁZIS (England, Premier League, Arsenal kerettel)
-        const defaultDB = [
-            {
-                "country": "England",
-                "leagues": [
-                    {
-                        "name": "Premier League",
-                        "teams": [
-                            {
-                                "name": "Arsenal",
-                                "formation": "4-4-2",
-                                "players": [
-                                    { "number": 6, "name": "Gabriel", "nat": "Brazil", "pos": "LCB", "age": 28, "ovr": 89, "pot": 90, "contract": "2029", "value": "€97,500,000", "wage": "€245,000", "skill": 89, "goals": 0, "yellowCards": 0, "redCards": 0, "suspendedMatches": 0, "cleanSheets": 0, "transferListed": false, "stamina": 100 },
-                                    { "number": 1, "name": "David Raya", "nat": "Spain", "pos": "GK", "age": 30, "ovr": 88, "pot": 88, "contract": "2028", "value": "€61,000,000", "wage": "€145,000", "skill": 88, "goals": 0, "yellowCards": 0, "redCards": 0, "suspendedMatches": 0, "cleanSheets": 0, "transferListed": false, "stamina": 100 },
-                                    { "number": 41, "name": "Declan Rice", "nat": "England", "pos": "LDM", "age": 27, "ovr": 88, "pot": 89, "contract": "2028", "value": "€93,500,000", "wage": "€215,000", "skill": 88, "goals": 0, "yellowCards": 0, "redCards": 0, "suspendedMatches": 0, "cleanSheets": 0, "transferListed": false, "stamina": 100 },
-                                    { "number": 7, "name": "Bukayo Saka", "nat": "England", "pos": "RM", "age": 24, "ovr": 87, "pot": 89, "contract": "2030", "value": "€103,500,000", "wage": "€195,000", "skill": 87, "goals": 0, "yellowCards": 0, "redCards": 0, "suspendedMatches": 0, "cleanSheets": 0, "transferListed": false, "stamina": 100 },
-                                    { "number": 8, "name": "Martin Ødegaard", "nat": "Norway", "pos": "CAM", "age": 27, "ovr": 86, "pot": 89, "contract": "2028", "value": "€86,500,000", "wage": "€190,000", "skill": 86, "goals": 0, "yellowCards": 0, "redCards": 0, "suspendedMatches": 0, "cleanSheets": 0, "transferListed": false, "stamina": 100 },
-                                    { "number": 39, "name": "Bruno Guimarães", "nat": "Brazil", "pos": "RDM", "age": 28, "ovr": 86, "pot": 87, "contract": "2030", "value": "€73,500,000", "wage": "€200,000", "skill": 86, "goals": 0, "yellowCards": 0, "redCards": 0, "suspendedMatches": 0, "cleanSheets": 0, "transferListed": false, "stamina": 100 },
-                                    { "number": 17, "name": "Christos Tzolis", "nat": "Greece", "pos": "LM", "age": 24, "ovr": 82, "pot": 88, "contract": "2031", "value": "€48,000,000", "wage": "€125,000", "skill": 82, "goals": 0, "yellowCards": 0, "redCards": 0, "suspendedMatches": 0, "cleanSheets": 0, "transferListed": false, "stamina": 100 },
-                                    { "number": 33, "name": "Riccardo Calafiori", "nat": "Italy", "pos": "LB", "age": 24, "ovr": 82, "pot": 86, "contract": "2029", "value": "€40,500,000", "wage": "€110,000", "skill": 82, "goals": 0, "yellowCards": 0, "redCards": 0, "suspendedMatches": 0, "cleanSheets": 0, "transferListed": false, "stamina": 100 },
-                                    { "number": 4, "name": "Benjamin White", "nat": "England", "pos": "RB", "age": 28, "ovr": 81, "pot": 84, "contract": "2028", "value": "€29,000,000", "wage": "€125,000", "skill": 81, "goals": 0, "yellowCards": 0, "redCards": 0, "suspendedMatches": 0, "cleanSheets": 0, "transferListed": false, "stamina": 100 },
-                                    { "number": 29, "name": "Kai Havertz", "nat": "Germany", "pos": "ST", "age": 27, "ovr": 81, "pot": 85, "contract": "2028", "value": "€35,000,000", "wage": "€135,000", "skill": 81, "goals": 0, "yellowCards": 0, "redCards": 0, "suspendedMatches": 0, "cleanSheets": 0, "transferListed": false, "stamina": 100 },
-                                    { "number": 3, "name": "Cristhian Mosquera", "nat": "Spain", "pos": "RCB", "age": 22, "ovr": 78, "pot": 85, "contract": "2030", "value": "€26,500,000", "wage": "€81,000", "skill": 78, "goals": 0, "yellowCards": 0, "redCards": 0, "suspendedMatches": 0, "cleanSheets": 0, "transferListed": false, "stamina": 100 },
-                                    { "number": 2, "name": "William Saliba", "nat": "France", "pos": "CB", "age": 25, "ovr": 88, "pot": 90, "contract": "2030", "value": "€101,500,000", "wage": "€205,000", "skill": 88, "goals": 0, "yellowCards": 0, "redCards": 0, "suspendedMatches": 0, "cleanSheets": 0, "transferListed": false, "stamina": 100 },
-                                    { "number": 14, "name": "Viktor Gyökeres", "nat": "Sweden", "pos": "ST", "age": 28, "ovr": 86, "pot": 87, "contract": "2030", "value": "€75,500,000", "wage": "€215,000", "skill": 86, "goals": 0, "yellowCards": 0, "redCards": 0, "suspendedMatches": 0, "cleanSheets": 0, "transferListed": false, "stamina": 100 },
-                                    { "number": 15, "name": "Ezri Konsa", "nat": "England", "pos": "CB", "age": 28, "ovr": 84, "pot": 85, "contract": "2030", "value": "€40,000,000", "wage": "€160,000", "skill": 84, "goals": 0, "yellowCards": 0, "redCards": 0, "suspendedMatches": 0, "cleanSheets": 0, "transferListed": false, "stamina": 100 },
-                                    { "number": 10, "name": "Eberechi Eze", "nat": "England", "pos": "CAM", "age": 28, "ovr": 84, "pot": 84, "contract": "2029", "value": "€42,500,000", "wage": "€170,000", "skill": 84, "goals": 0, "yellowCards": 0, "redCards": 0, "suspendedMatches": 0, "cleanSheets": 0, "transferListed": false, "stamina": 100 },
-                                    { "number": 36, "name": "Zubimendi", "nat": "Spain", "pos": "CDM", "age": 27, "ovr": 84, "pot": 86, "contract": "2030", "value": "€45,500,000", "wage": "€155,000", "skill": 84, "goals": 0, "yellowCards": 0, "redCards": 0, "suspendedMatches": 0, "cleanSheets": 0, "transferListed": false, "stamina": 100 },
-                                    { "number": 12, "name": "Jurriën Timber", "nat": "Netherlands", "pos": "RB", "age": 25, "ovr": 84, "pot": 87, "contract": "2028", "value": "€51,500,000", "wage": "€145,000", "skill": 84, "goals": 0, "yellowCards": 0, "redCards": 0, "suspendedMatches": 0, "cleanSheets": 0, "transferListed": false, "stamina": 100 },
-                                    { "number": 5, "name": "Piero Hincapié", "nat": "Ecuador", "pos": "LB", "age": 24, "ovr": 84, "pot": 87, "contract": "2031", "value": "€53,500,000", "wage": "€130,000", "skill": 84, "goals": 0, "yellowCards": 0, "redCards": 0, "suspendedMatches": 0, "cleanSheets": 0, "transferListed": false, "stamina": 100 },
-                                    { "number": 23, "name": "Mikel Merino", "nat": "Spain", "pos": "CM", "age": 30, "ovr": 83, "pot": 85, "contract": "2028", "value": "€40,000,000", "wage": "€150,000", "skill": 83, "goals": 0, "yellowCards": 0, "redCards": 0, "suspendedMatches": 0, "cleanSheets": 0, "transferListed": false, "stamina": 100 },
-                                    { "number": 20, "name": "Noni Madueke", "nat": "England", "pos": "RW", "age": 24, "ovr": 80, "pot": 84, "contract": "2030", "value": "€30,000,000", "wage": "€110,000", "skill": 80, "goals": 0, "yellowCards": 0, "redCards": 0, "suspendedMatches": 0, "cleanSheets": 0, "transferListed": false, "stamina": 100 },
-                                    { "number": 13, "name": "Kepa", "nat": "Spain", "pos": "GK", "age": 31, "ovr": 78, "pot": 84, "contract": "2028", "value": "€13,500,000", "wage": "€64,000", "skill": 78, "goals": 0, "yellowCards": 0, "redCards": 0, "suspendedMatches": 0, "cleanSheets": 0, "transferListed": false, "stamina": 100 },
-                                    { "number": 49, "name": "Myles Lewis-Skelly", "nat": "England", "pos": "LB", "age": 19, "ovr": 78, "pot": 87, "contract": "2030", "value": "€29,000,000", "wage": "€64,000", "skill": 78, "goals": 0, "yellowCards": 0, "redCards": 0, "suspendedMatches": 0, "cleanSheets": 0, "transferListed": false, "stamina": 100 },
-                                    { "number": 30, "name": "Illan Meslier", "nat": "France", "pos": "GK", "age": 26, "ovr": 71, "pot": 77, "contract": "2029", "value": "€2,300,000", "wage": "€34,000", "skill": 71, "goals": 0, "yellowCards": 0, "redCards": 0, "suspendedMatches": 0, "cleanSheets": 0, "transferListed": false, "stamina": 100 }
-                                ]
-                            },
-                            { "name": "Manchester City", "formation": "4-4-2", "players": [] },
-                            { "name": "Liverpool", "formation": "4-4-2", "players": [] },
-                            { "name": "Manchester United", "formation": "4-4-2", "players": [] },
-                            { "name": "Chelsea", "formation": "4-4-2", "players": [] },
-                            { "name": "Tottenham Hotspur", "formation": "4-4-2", "players": [] },
-                            { "name": "Aston Villa", "formation": "4-4-2", "players": [] },
-                            { "name": "Newcastle United", "formation": "4-4-2", "players": [] },
-                            { "name": "Nottingham Forest", "formation": "4-4-2", "players": [] },
-                            { "name": "Sunderland", "formation": "4-4-2", "players": [] },
-                            { "name": "Crystal Palace", "formation": "4-4-2", "players": [] },
-                            { "name": "Everton", "formation": "4-4-2", "players": [] },
-                            { "name": "Brighton & Hove Albion", "formation": "4-4-2", "players": [] },
-                            { "name": "Brentford", "formation": "4-4-2", "players": [] },
-                            { "name": "AFC Bournemouth", "formation": "4-4-2", "players": [] },
-                            { "name": "Leeds United", "formation": "4-4-2", "players": [] },
-                            { "name": "Fulham", "formation": "4-4-2", "players": [] },
-                            { "name": "Ipswich Town", "formation": "4-4-2", "players": [] },
-                            { "name": "Coventry City", "formation": "4-4-2", "players": [] },
-                            { "name": "Hull City", "formation": "4-4-2", "players": [] }
-                        ]
-                    }
-                ]
+        // KITALÁLT ANGOL ELSŐ OSZTÁLY GENERÁTORA (20 Csapat, egyedi felállások, Tier 1-4 erősorrend, ~27 játékos/csapat)
+        function generateFictionalLeague() {
+            const firstNames = ["Jack", "Oliver", "Harry", "Mason", "Liam", "Ethan", "Callum", "Noah", "George", "Charlie", "Jacob", "Alfie", "Freddie", "Archie", "Arthur", "Leo", "Oscar", "Henry", "Theo", "Joshua", "James", "Alexander", "Daniel", "Matthew", "Samuel", "Joseph", "Benjamin", "Sebastian", "Luke", "Dylan"];
+            const lastNames = ["Sterling", "Vance", "Thorne", "Reed", "Hayes", "Bennett", "Drake", "Shaw", "Fletcher", "Mercer", "Sinclair", "Bramwell", "Cross", "Wilder", "Kingsley", "Vane", "Blackwood", "Holloway", "Westbrook", "Stone", "Barrett", "Sutton", "Carlisle", "Monroe", "Dalton", "Gentry", "Waverly", "Prescott", "Winslow", "Fairfax"];
+            const nations = ["England", "England", "England", "England", "Scotland", "Wales", "Ireland", "France", "Spain", "Brazil", "Germany", "Netherlands", "Portugal", "Argentina", "Italy", "Belgium"];
+
+            const teamsConfig = [
+                { name: "London Crown FC", formation: "4-3-3", tier: 1 },
+                { name: "Ironbridge City", formation: "4-2-3-1", tier: 1 },
+                { name: "Kingsport United", formation: "3-5-2", tier: 1 },
+                { name: "Redford Athletic", formation: "4-4-2", tier: 1 },
+                { name: "Silverford Rovers", formation: "4-1-4-1", tier: 2 },
+                { name: "Highbury Town", formation: "5-3-2", tier: 2 },
+                { name: "Blackwood Wanderers", formation: "4-3-2-1", tier: 2 },
+                { name: "St. Jude City", formation: "3-4-3", tier: 2 },
+                { name: "Northwich Albion", formation: "4-2-2-2", tier: 2 },
+                { name: "Oakhaven FC", formation: "4-5-1", tier: 3 },
+                { name: "Riverdale Town", formation: "4-3-3", tier: 3 },
+                { name: "Beacon Hill United", formation: "4-4-2", tier: 3 },
+                { name: "Southgate Athletic", formation: "5-4-1", tier: 3 },
+                { name: "Thornbury City", formation: "4-2-3-1", tier: 3 },
+                { name: "Westhaven Rovers", formation: "3-5-2", tier: 3 },
+                { name: "Ashwood Town", formation: "4-4-2", tier: 4 },
+                { name: "Crestview FC", formation: "4-1-4-1", tier: 4 },
+                { name: "Stonefield United", formation: "5-3-2", tier: 4 },
+                { name: "Meadowlands Athletic", formation: "4-3-3", tier: 4 },
+                { name: "Portsbreeze City", formation: "4-2-3-1", tier: 4 }
+            ];
+
+            function getFormationPositions(fmt) {
+                switch(fmt) {
+                    case "4-3-3": return ["GK", "RB", "CB", "CB", "LB", "CDM", "CM", "CM", "RW", "ST", "LW"];
+                    case "4-2-3-1": return ["GK", "RB", "CB", "CB", "LB", "CDM", "CDM", "CAM", "RM", "LM", "ST"];
+                    case "3-5-2": return ["GK", "CB", "CB", "CB", "RM", "CDM", "CM", "CAM", "LM", "ST", "ST"];
+                    case "4-4-2": return ["GK", "RB", "CB", "CB", "LB", "RM", "CM", "CM", "LM", "ST", "ST"];
+                    case "5-3-2": return ["GK", "RWB", "CB", "CB", "CB", "LWB", "CM", "CM", "CM", "ST", "ST"];
+                    case "3-4-3": return ["GK", "CB", "CB", "CB", "RM", "CM", "CM", "LM", "RW", "ST", "LW"];
+                    case "4-1-4-1": return ["GK", "RB", "CB", "CB", "LB", "CDM", "RM", "CM", "CM", "LM", "ST"];
+                    case "5-4-1": return ["GK", "RWB", "CB", "CB", "CB", "LWB", "RM", "CM", "CM", "LM", "ST"];
+                    default: return ["GK", "RB", "CB", "CB", "LB", "RM", "CM", "CM", "LM", "ST", "ST"];
+                }
             }
-        ];
+
+            const numberPools = {
+                GK: [1, 13, 25, 31, 99],
+                DEF: [2, 3, 4, 5, 6, 12, 14, 15, 21, 23, 24, 26, 32, 34, 35],
+                MID: [6, 8, 10, 16, 17, 18, 20, 22, 28, 30, 36, 38, 40],
+                FWD: [7, 9, 11, 19, 27, 29, 33, 45, 77, 90]
+            };
+
+            let generatedTeams = [];
+
+            teamsConfig.forEach((team, tIdx) => {
+                let players = [];
+                let usedNames = new Set();
+                let usedNumbers = new Set();
+
+                let baseOvr = team.tier === 1 ? 84 : team.tier === 2 ? 78 : team.tier === 3 ? 72 : 67;
+                let startingPos = getFormationPositions(team.formation);
+                
+                // Kezdő 11 generálása pozícióra szabva
+                startingPos.forEach((pos, i) => {
+                    let fn = firstNames[(tIdx * 11 + i) % firstNames.length];
+                    let ln = lastNames[(tIdx * 13 + i * 3) % lastNames.length];
+                    let fullNm = `${fn} ${ln}`;
+                    usedNames.add(fullNm);
+
+                    let nat = nations[(tIdx + i) % nations.length];
+                    let posCategory = pos.includes("GK") ? "GK" : (pos.includes("CB") || pos.includes("LB") || pos.includes("RB") || pos.includes("WB")) ? "DEF" : (pos.includes("M") || pos.includes("CAM") || pos.includes("CDM")) ? "MID" : "FWD";
+                    
+                    let pool = numberPools[posCategory];
+                    let num = pool.find(n => !usedNumbers.has(n));
+                    if (!num) {
+                        for (let n = 1; n <= 99; n++) { if (!usedNumbers.has(n)) { num = n; break; } }
+                    }
+                    usedNumbers.add(num);
+
+                    let age = 19 + ((i * 3 + tIdx * 2) % 14);
+                    let ovrOffset = (i === 9 || i === 6 || i === 0) ? 3 : (i % 2 === 0 ? 1 : -2);
+                    let ovr = Math.min(92, Math.max(62, baseOvr + ovrOffset));
+                    let pot = age < 23 ? ovr + 5 + (i % 4) : (age > 30 ? Math.max(ovr - 2, 60) : ovr + 1);
+                    let contract = 2027 + (i % 4);
+
+                    let valNum = Math.round(Math.pow(ovr / 50, 6.2) * 320000);
+                    let wageNum = Math.round(valNum * 0.0035);
+                    let value = "€" + valNum.toLocaleString('en-US');
+                    let wage = "€" + wageNum.toLocaleString('en-US');
+
+                    players.push({
+                        number: num, name: fullNm, nat: nat, pos: pos, age: age, ovr: ovr, pot: pot,
+                        contract: String(contract), value: value, wage: wage, skill: ovr,
+                        goals: 0, yellowCards: 0, redCards: 0, suspendedMatches: 0, cleanSheets: 0, transferListed: false, stamina: 100
+                    });
+                });
+
+                // Cserék és Tartalékok generálása (16 játékos -> Összesen 27 játékos / csapat)
+                const reservePositions = ["GK", "GK", "CB", "CB", "LB", "RB", "CDM", "CM", "CM", "CAM", "RM", "LM", "RW", "LW", "ST", "ST"];
+                reservePositions.forEach((pos, rIdx) => {
+                    let fn = firstNames[(tIdx * 7 + rIdx * 5 + 15) % firstNames.length];
+                    let ln = lastNames[(tIdx * 11 + rIdx * 4 + 7) % lastNames.length];
+                    let fullNm = `${fn} ${ln}`;
+                    if (usedNames.has(fullNm)) fullNm += " Jr.";
+                    usedNames.add(fullNm);
+
+                    let nat = nations[(tIdx * 2 + rIdx) % nations.length];
+                    let posCategory = pos.includes("GK") ? "GK" : (pos.includes("CB") || pos.includes("LB") || pos.includes("RB")) ? "DEF" : (pos.includes("M") || pos.includes("CAM") || pos.includes("CDM")) ? "MID" : "FWD";
+
+                    let pool = numberPools[posCategory];
+                    let num = pool.find(n => !usedNumbers.has(n));
+                    if (!num) {
+                        for (let n = 1; n <= 99; n++) { if (!usedNumbers.has(n)) { num = n; break; } }
+                    }
+                    usedNumbers.add(num);
+
+                    let age = 18 + ((rIdx * 4 + tIdx) % 16);
+                    let ovrOffset = - (2 + (rIdx % 5));
+                    let ovr = Math.min(88, Math.max(58, baseOvr + ovrOffset));
+                    let pot = age < 22 ? ovr + 6 + (rIdx % 4) : (age > 30 ? Math.max(ovr - 3, 55) : ovr + 1);
+                    let contract = 2026 + (rIdx % 5);
+
+                    let valNum = Math.round(Math.pow(ovr / 50, 6.2) * 320000);
+                    let wageNum = Math.round(valNum * 0.0035);
+                    let value = "€" + valNum.toLocaleString('en-US');
+                    let wage = "€" + wageNum.toLocaleString('en-US');
+
+                    players.push({
+                        number: num, name: fullNm, nat: nat, pos: pos, age: age, ovr: ovr, pot: pot,
+                        contract: String(contract), value: value, wage: wage, skill: ovr,
+                        goals: 0, yellowCards: 0, redCards: 0, suspendedMatches: 0, cleanSheets: 0, transferListed: false, stamina: 100
+                    });
+                });
+
+                generatedTeams.push({
+                    name: team.name,
+                    formation: team.formation,
+                    players: players
+                });
+            });
+
+            return [
+                {
+                    country: "England",
+                    leagues: [
+                        {
+                            name: "Premier Division",
+                            teams: generatedTeams
+                        }
+                    ]
+                }
+            ];
+        }
 
         let db = [];
         try {
-            let savedDB = localStorage.getItem('tm26_db_v162');
+            let savedDB = localStorage.getItem('tm26_db_v170');
             if (savedDB) {
                 db = JSON.parse(savedDB);
             } else {
-                db = defaultDB; // Ha nincs mentés, betölti az alapértelmezett adatbázist!
+                db = generateFictionalLeague();
                 saveToLocalStorage();
             }
         } catch (e) {
-            db = defaultDB;
+            db = generateFictionalLeague();
         }
 
         let currentCountryIdx = 0, currentLeagueIdx = 0, currentTeamIdx = 0;
         let modalActionType = null, editingPlayerIdx = null;
 
         function saveToLocalStorage() {
-            localStorage.setItem('tm26_db_v162', JSON.stringify(db));
+            localStorage.setItem('tm26_db_v170', JSON.stringify(db));
         }
 
         function downloadDatabaseJSON() {
@@ -869,6 +959,7 @@
             let lblTeam = document.getElementById('lbl-team');
             let emblemBox = document.getElementById('editor-emblem-box');
             let squadContainer = document.getElementById('squad-container');
+            let squadTitleLabel = document.getElementById('squad-title-label');
 
             if (!db || db.length === 0) {
                 lblCountry.innerText = "Nincs ország";
@@ -896,6 +987,12 @@
             lblLeague.innerText = l ? l.name : "Bajnokság";
             lblTeam.innerText = t ? t.name : "Csapat";
             if (t) { emblemBox.innerHTML = getTeamEmblemSVG(t.name); } else { emblemBox.innerHTML = ""; }
+
+            if (t) {
+                squadTitleLabel.innerText = `Keret (${t.players ? t.players.length : 0} fő) - Felállás: ${t.formation || '4-4-2'}`;
+            } else {
+                squadTitleLabel.innerText = "Keret:";
+            }
 
             squadContainer.innerHTML = '';
             if (t && t.players && t.players.length > 0) {
@@ -1069,12 +1166,12 @@
         }
 
         function resetDatabase() {
-            if (confirm("Biztosan visszaállítod az alapértelmezett adatbázist?")) {
-                db = JSON.parse(JSON.stringify(defaultDB));
+            if (confirm("Biztosan visszaállítod az adatbázist az alapértelmezett kitalált angol bajnokságra?")) {
+                db = generateFictionalLeague();
                 saveToLocalStorage();
                 currentCountryIdx = 0; currentLeagueIdx = 0; currentTeamIdx = 0;
                 updateEditorUI();
-                showToast("🔄 Alapértelmezett adatbázis betöltve!");
+                showToast("🔄 Kitalált adatbázis sikeresen betöltve!");
             }
         }
     </script>
